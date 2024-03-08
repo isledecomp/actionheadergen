@@ -1,6 +1,6 @@
 # actionheadergen
 
-This tool automatically generates C++ headers containing enums representing the action index found in LEGO Island Inferleaf (.SI) files. While it is primarily designed to solve a glaring labor issue with manually inserting thousands of action entries in the ongoing [LEGO Island decompilation](https://github.com/isledecomp/isle), it could be repurposed for other uses as well.
+This tool automatically generates C++ headers containing enums representing the action index found in LEGO Island Interleaf (.SI) files. While it is primarily designed to solve a glaring labor issue with manually inserting thousands of action entries in the ongoing [LEGO Island decompilation](https://github.com/isledecomp/isle), it could be repurposed for other uses as well.
 
 ## Background
 

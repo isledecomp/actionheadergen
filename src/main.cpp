@@ -36,12 +36,13 @@ bool RecursivelyFindInterleaf(const char *p_path, std::vector<std::string> &p_in
         } 
         else {
             if (strcasestr(dentry->d_name, ".si") != NULL) {
-                // found an Interleaf file, return it
+                // found an Interleaf file
                 char fullPathBuffer[1024];
 
                 // construct the full path to the file first
                 snprintf(fullPathBuffer, sizeof(fullPathBuffer), "%s/%s", p_path, dentry->d_name);
 
+                // push it to the vector
                 p_interleafFiles.push_back(fullPathBuffer);
             }
         }
