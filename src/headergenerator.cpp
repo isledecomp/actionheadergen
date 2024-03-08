@@ -98,6 +98,9 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::vector<const char 
     // cache action vector size
     int vecSize = p_actionVector->size();
 
+    // add generic "none" state to the enum
+    m_fout << "    c_none = -1,\n\n";
+
     // iterate through the action vector and insert each action into enum
     for (int i = 0; i < vecSize; i++) {
         if (strlen(p_actionVector->at(i)) == 0) {
