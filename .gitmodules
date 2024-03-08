@@ -1,0 +1,3 @@
+[submodule "libweaver"]
+	path = libweaver
+	url = https://github.com/isledecomp/SIEdit
