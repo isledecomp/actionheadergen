@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
         // sort the Interleaf's actions into a vector 
         // if libweaver is stable enough, a failure is only
         // possible if no actions exist in the Interleaf
-        if (!ihandler.SortActionsIntoVector()) {
+        if (!ihandler.StartActionSorting()) {
             printf("No actions found in this Interleaf, exiting\n");
             return 1;
         }
@@ -121,18 +121,18 @@ int main(int argc, char *argv[])
         // generate the actual header
         // we use the Interleaf name for the filename
         // and the vector previously generated to make the enum data
-        if (!hgenerator.GenerateHeader(filename, ihandler.GetActionVector(), outputDir)) {
+        if (!hgenerator.GenerateHeader(filename, ihandler.GetActionMap(), outputDir)) {
             // we failed for some reason, so let's just move on
             printf("Failure generating header for %s, skipping\n", filename);
 
-            delete ihandler.GetActionVector();
+            delete ihandler.GetActionMap();
             continue;
         }
 
         // all steps were successful
-        delete ihandler.GetActionVector();
+        delete ihandler.GetActionMap();
 
-        printf("Succesfully generated header for %s\n", filename);
+        printf("Successfully generated header for %s\n", filename);
     }
 
     printf("Finished!\n");

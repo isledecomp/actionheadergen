@@ -3,15 +3,15 @@
 
 #include <fstream>
 #include <iostream>
-#include <vector>
+#include <map>
 
 class HeaderGenerator {
 public:
-    bool GenerateHeader(char *p_interleafName, std::vector<std::string> *p_actionVector, char *p_outputDir);
+    bool GenerateHeader(char *p_interleafName, std::map<size_t, std::string> *p_actionMap, char *p_outputDir);
 
 private:
     bool CreateHeader(char *p_interleafName, char *p_outputDir);
-    bool WriteHeader(char *p_interleafName, std::vector<std::string> *p_actionVector);
+    bool WriteHeader(char *p_interleafName, std::map<size_t, std::string> *p_actionMap);
     std::ofstream m_fout;
     char m_normalizedInlfName[512];
 };

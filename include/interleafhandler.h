@@ -6,15 +6,15 @@
 class InterleafHandler {
 public:
     si::Interleaf::Error ReadInterleaf(char *p_filePath);
-    bool SortActionsIntoVector();
+    bool StartActionSorting();
 
-    inline std::vector<std::string> *GetActionVector() { return m_actionVector; }
+    inline std::map<size_t, std::string> *GetActionMap() { return m_actionMap; }
 
 private:
-    void AddActionsToMap(std::map<size_t, std::string> &p_actionMap, si::Core *p_object);
+    void AddActionsToMap(si::Core *p_object);
     si::Interleaf m_inlf;
     size_t m_actionCount;
-    std::vector<std::string> *m_actionVector;
+    std::map<size_t, std::string> *m_actionMap;
 };
 
 #endif // INTERLEAFHANDLER_H
