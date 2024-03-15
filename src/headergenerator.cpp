@@ -95,14 +95,13 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
     m_fout << guardBuffer << "\n\n";
 
     // we need to scope this enum to avoid conflicts
-    m_fout << "class " << m_normalizedInlfName << "Script {\n";
-    m_fout << "public:\n";
+    m_fout << "namespace " << m_normalizedInlfName << "Script\n{\n";
 
     // declare enum
-    m_fout << "    enum Script {\n";
+    m_fout << "enum Script {\n";
 
     // add generic "none" state to the enum
-    m_fout << "        c_none" << m_normalizedInlfName << " = -1,\n\n";
+    m_fout << "\t\tc_none" << m_normalizedInlfName << " = -1,\n\n";
 
     // iterate through the action map and insert each action into enum
     bool isLast = false;
@@ -117,7 +116,7 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
         }
 
         // actually write the enum entry
-        m_fout << "        " << g_enumEntryPrefix << it->second << " = " << it->first;
+        m_fout << "\t\t" << g_enumEntryPrefix << it->second << " = " << it->first;
         if (!isLast) {
             // if there are still more entries, we need write a comma
             m_fout << ",";
@@ -127,8 +126,8 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
         i++;
     }
 
-    // all done with actions, so lets close the enum and class
-    m_fout << "    };\n};\n\n";
+    // all done with actions, so lets close the enum and namespace
+    m_fout << "};\n} // namespace " << m_normalizedInlfName << "Script\n\n";
 
     // finally, close the include guard
     m_fout << "#endif // " << guardName << "\n";
