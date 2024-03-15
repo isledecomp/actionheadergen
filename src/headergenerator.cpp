@@ -101,7 +101,7 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
     m_fout << "enum Script {\n";
 
     // add generic "none" state to the enum
-    m_fout << "\t\tc_none" << m_normalizedInlfName << " = -1,\n\n";
+    m_fout << "\tc_none" << m_normalizedInlfName << " = -1,\n\n";
 
     // iterate through the action map and insert each action into enum
     bool isLast = false;
@@ -116,7 +116,7 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
         }
 
         // actually write the enum entry
-        m_fout << "\t\t" << g_enumEntryPrefix << it->second << " = " << it->first;
+        m_fout << "\t" << g_enumEntryPrefix << it->second << " = " << it->first;
         if (!isLast) {
             // if there are still more entries, we need write a comma
             m_fout << ",";
