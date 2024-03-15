@@ -1,5 +1,7 @@
 #include "interleafhandler.h"
 
+typedef std::map<size_t, std::string> ActionMap;
+
 si::Interleaf::Error InterleafHandler::ReadInterleaf(char *p_filePath)
 {
     // this is basically a wrapper function for libweaver's
@@ -24,6 +26,9 @@ bool InterleafHandler::StartActionSorting()
     for (size_t i = 0; i < m_actionCount; i++) {
         AddActionsToMap(m_inlf.GetChildAt(i));
     }
+
+    // process duplicates in the map
+    ProcessDuplicates();
 
     // success
     return true;
@@ -51,6 +56,30 @@ void InterleafHandler::AddActionsToMap(si::Core *p_object)
                 m_actionMap->insert(std::make_pair(actionAsObject->id(), actionAsObject->name()));
             }
             else m_actionMap->insert(std::make_pair(actionAsObject->id(), actionAsObject->name()));
+        }
+    }
+}
+
+void InterleafHandler::ProcessDuplicates()
+{
+    // some Interleaf files can have duplicate object names,
+    // which is obviously bad in the context of an enum
+    // where every label is expected to be unique
+  
+    ActionMap::iterator it = m_actionMap->begin();
+    std::string prevName = it->second;
+
+    for (++it; it != m_actionMap->end(); it++) {
+        if (it->second == prevName) {
+            // found a dupe, append the object ID to its name
+            it->second += "_" + std::to_string(it->first);
+            // retroactively append the object ID to the original as well
+            ActionMap::iterator prevIt = it;
+            --prevIt;
+            prevIt->second += "_" + std::to_string(prevIt->first);
+        }
+        else {
+            prevName = it->second;
         }
     }
 }

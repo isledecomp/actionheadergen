@@ -12,6 +12,7 @@ public:
 
 private:
     void AddActionsToMap(si::Core *p_object);
+    void ProcessDuplicates();
     si::Interleaf m_inlf;
     size_t m_actionCount;
     std::map<size_t, std::string> *m_actionMap;
