@@ -126,7 +126,7 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
 
         // actually write the enum entry
         m_fout << "\t" << g_enumEntryPrefix << it->second << " = " << it->first;
-        if (!isLast) {
+        if (!isLast && i != 1999) {
             // if there are still more entries, we need write a comma
             m_fout << ",";
         }
