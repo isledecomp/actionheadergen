@@ -110,12 +110,18 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
     bool isLast = false;
     size_t i = 0;
     ActionMap::iterator prev = p_actionMap->begin();
-    for (ActionMap::iterator it = p_actionMap->begin(); it != p_actionMap->end(); it++) {
+    for (ActionMap::iterator it = p_actionMap->begin(); it != p_actionMap->end(); ++it) {
         isLast = it == (--p_actionMap->end());
 
         // seperate distanced action ids with whitespace (styling)
         if (it->first != prev->first + 1 && i != 0) {
             m_fout << "\n";
+        }
+
+        if (i == 2000) {
+            // some compilers don't accept extremely large enums, 
+            // so we split them up here in case of 2000+ entries
+            m_fout << "};\n\n#ifdef COMPAT_MODE\nenum Script2 : int {\n#else\nenum Script2 {\n#endif\n"; 
         }
 
         // actually write the enum entry
