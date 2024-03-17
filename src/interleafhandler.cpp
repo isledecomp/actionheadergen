@@ -43,7 +43,7 @@ void InterleafHandler::AddActionsToMap(si::Core *p_object)
         if (actionAsObject->type() != si::MxOb::Null) {
             // check for sub-objects
             if (actionAsObject->HasChildren()) {
-                for (si::Core::Children::const_iterator it = actionAsObject->GetChildren().cbegin(); it != actionAsObject->GetChildren().cend(); it++) {
+                for (si::Core::Children::const_iterator it = actionAsObject->GetChildren().cbegin(); it != actionAsObject->GetChildren().cend(); ++it) {
                     // we have sub-objects, so we need to account for these
                     si::Object *subObject = static_cast<si::Object *>(*it);
                     if (subObject->HasChildren()) {
@@ -62,25 +62,25 @@ void InterleafHandler::AddActionsToMap(si::Core *p_object)
 
 void InterleafHandler::ProcessDuplicates()
 {
-    // some Interleaf files can have duplicate object names,
+    // some Interleaf files can have duplicate action names,
     // which is obviously bad in the context of an enum
     // where every label is expected to be unique
-  
-    ActionMap::iterator it = m_actionMap->begin();
-    std::string prevName = it->second;
 
-    for (++it; it != m_actionMap->end(); it++) {
-        if (it->second == prevName) {
-            // found a dupe, append the object ID to its name
+    std::map<std::string, size_t> duplicatesMap;
+
+    for (ActionMap::iterator it = m_actionMap->begin(); it != m_actionMap->end(); ++it) {
+        // iterate through the entire action map 
+        // once to collect the duplicate count
+        duplicatesMap[it->second]++;
+    }
+
+    for (ActionMap::iterator it = m_actionMap->begin(); it != m_actionMap->end(); ++it) {
+        // iterate again; but this time we use the previously populated duplicatesMap
+        // to update the action names of all of the actions that have duplicates 
+        if (duplicatesMap[it->second] > 1) {
+            // append the index to the name
             it->second += "_" + std::to_string(it->first);
-            // retroactively append the object ID to the original as well
-            ActionMap::iterator prevIt = it;
-            --prevIt;
-            prevIt->second += "_" + std::to_string(prevIt->first);
-        }
-        else {
-            prevName = it->second;
-        }
+        } 
     }
 }
 
