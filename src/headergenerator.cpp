@@ -97,8 +97,11 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
     // we need to scope this enum to avoid conflicts
     m_fout << "namespace " << m_normalizedInlfName << "Script\n{\n";
 
+    // add ifdefs for conditional compilation (decomp requirement)
+    m_fout << "#ifdef COMPAT_MODE\nenum Script : int {\n#else\n";
+
     // declare enum
-    m_fout << "enum Script {\n";
+    m_fout << "enum Script {\n#endif\n";
 
     // add generic "none" state to the enum
     m_fout << "\tc_none" << m_normalizedInlfName << " = -1,\n\n";
