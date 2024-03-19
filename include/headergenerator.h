@@ -7,7 +7,9 @@
 
 class HeaderGenerator {
 public:
+    bool CreateForwardDeclHeader(char *p_outputDir);
     bool GenerateHeader(char *p_interleafName, std::map<size_t, std::string> *p_actionMap, char *p_outputDir);
+    std::ofstream m_declFout;
 
 private:
     bool CreateHeader(char *p_interleafName, char *p_outputDir);

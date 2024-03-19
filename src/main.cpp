@@ -80,6 +80,13 @@ int main(int argc, char *argv[])
     }
     else interleafFiles.push_back(filePath); // we were provided a single file, but we'll still use the vector
 
+    // generate special forward declaration header
+    HeaderGenerator hgenerator;
+
+    if (!hgenerator.CreateForwardDeclHeader(outputDir)) {
+        return 1;  
+    }
+
     // iterate through every Interleaf in the vector and perform our operations
     for (int i = 0; i < interleafFiles.size(); i++) {
 
@@ -116,8 +123,6 @@ int main(int argc, char *argv[])
             filename = filename + 1;
         }
 
-        HeaderGenerator hgenerator;
-
         // generate the actual header
         // we use the Interleaf name for the filename
         // and the vector previously generated to make the enum data
@@ -134,6 +139,9 @@ int main(int argc, char *argv[])
 
         printf("Successfully generated header for %s\n", filename);
     }
+    
+    hgenerator.m_declFout << "#endif // ACTIONSFWD_H";
+    hgenerator.m_declFout.close();
 
     printf("Finished!\n");
     return 0;
