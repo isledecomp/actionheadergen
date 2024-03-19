@@ -171,7 +171,7 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
 
     // all done with actions, so lets close the enum and namespace
     m_fout << "};\n} // namespace " << m_normalizedInlfName << "Script\n\n";
-    m_declFout << "} // namespace " << m_normalizedInlfName << "\n\n";
+    m_declFout << "} // namespace " << m_normalizedInlfName << "Script\n\n";
 
     // finally, close the include guard
     m_fout << "#endif // " << guardName << "\n";
