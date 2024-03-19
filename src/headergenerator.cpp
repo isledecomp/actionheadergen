@@ -129,8 +129,8 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
     m_declFout << "namespace " << m_normalizedInlfName << "Script\n{\n";
 
     // add ifdefs for conditional compilation (decomp requirement)
-    m_fout << "#if __cplusplus < 201103L\nenum Script : int {\n#else\n";
-    m_declFout << "#if __cplusplus < 201103L\nenum Script : int;\n#else\n";
+    m_fout << "#if __cplusplus >= 201103L\nenum Script : int {\n#else\n";
+    m_declFout << "#if __cplusplus >= 201103L\nenum Script : int;\n#else\n";
 
     // declare enum
     m_fout << "enum Script {\n#endif\n";
@@ -154,8 +154,8 @@ bool HeaderGenerator::WriteHeader(char *p_interleafName, std::map<size_t, std::s
         if (i == 2000) {
             // some compilers don't accept extremely large enums, 
             // so we split them up here in case of 2000+ entries
-            m_fout << "};\n\n#if __cplusplus < 201103L\nenum Script2 : int {\n#else\nenum Script2 {\n#endif\n";
-            m_declFout << "\n#if __cplusplus < 201103L\nenum Script2 : int;\n#else\nenum Script2;\n#endif\n"; 
+            m_fout << "};\n\n#if __cplusplus >= 201103L\nenum Script2 : int {\n#else\nenum Script2 {\n#endif\n";
+            m_declFout << "\n#if __cplusplus >= 201103L\nenum Script2 : int;\n#else\nenum Script2;\n#endif\n"; 
         }
 
         // actually write the enum entry

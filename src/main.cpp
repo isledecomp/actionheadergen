@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
         printf("Successfully generated header for %s\n", filename);
     }
     
-    hgenerator.m_declFout << "#endif // ACTIONSFWD_H";
+    hgenerator.m_declFout << "#endif // ACTIONSFWD_H\n";
     hgenerator.m_declFout.close();
 
     printf("Finished!\n");
