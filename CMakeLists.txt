@@ -10,14 +10,14 @@ set(PROJECT_SOURCES
 
 add_executable(actionheadergen ${PROJECT_SOURCES})
 
-target_link_libraries(actionheadergen PRIVATE libweaver)
-
-target_link_directories(actionheadergen PRIVATE "${CMAKE_SOURCE_DIR}/libweaver/build/lib")
+add_subdirectory("${CMAKE_SOURCE_DIR}/libweaver/lib")
 
 target_include_directories(actionheadergen PRIVATE 
   "${CMAKE_SOURCE_DIR}/include"
   "${CMAKE_SOURCE_DIR}/libweaver/lib"
 )
+
+target_link_libraries(actionheadergen PRIVATE libweaver)
 
 set_target_properties(actionheadergen PROPERTIES
   CXX_STANDARD 98
