@@ -28,7 +28,7 @@ Some creative liberties possibly not present in the original codebase have been 
 
 This project uses the CMake build system. As this project makes use of [libweaver](https://github.com/isledecomp/SIEdit), you will need to pull the source recursively.
 
-The code in this repository should be cross-platform, aside from the use of dirent. Dirent has third party implementations on Windows that this project should build fine with, but a native recursive file search function using the WinAPI is still needed to eliminate this edge-case.
+The code in this repository is cross-platform and should build for Windows, macOS, and Linux. Additionally, it is C++98 compliant.
 
 ## Usage
 

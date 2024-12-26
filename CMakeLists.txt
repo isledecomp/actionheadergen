@@ -19,6 +19,10 @@ target_include_directories(actionheadergen PRIVATE
 
 target_link_libraries(actionheadergen PRIVATE libweaver)
 
+if (WIN32)
+  target_link_libraries(actionheadergen PRIVATE shlwapi)
+endif()
+
 set_target_properties(actionheadergen PROPERTIES
   CXX_STANDARD 98
   CXX_STANDARD_REQUIRED ON

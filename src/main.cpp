@@ -1,16 +1,83 @@
-#include <dirent.h>
-#include <stdio.h>
-#include <string>
-
 #include "headergenerator.h"
 #include "interleafhandler.h"
 
-bool RecursivelyFindInterleaf(const char *p_path, std::vector<std::string> &p_interleafFiles)
+#ifdef _WIN32
+#include <shlwapi.h>
+#include <windows.h>
+#define strcasecmp _stricmp
+#undef ERROR_SUCCESS
+#else
+#include <dirent.h>
+#endif
+
+#include <stdio.h>
+#include <string>
+
+bool RecursivelyFindInterleaf(const char* p_path, std::vector<std::string>& p_interleafFiles)
 {
-    // TODO: *by default* this is a UNIX-specific solution 
-    // Windows is capable of using dirent through third party implementations,
-    // but it would be nice to have something that works out of the box on Win32
-    // this is one of the pains of C++98, there is no good directory support in the standard
+#ifdef _WIN32
+    // C++98 compliant Windows implementation
+    HANDLE hFind;
+    WIN32_FIND_DATAA findData;
+
+    std::string searchPattern = std::string(p_path) + "\\*";
+
+    hFind = FindFirstFile(searchPattern.c_str(), &findData);
+    if (hFind == INVALID_HANDLE_VALUE)
+    {
+        printf("Could not open directory %s, exiting\n", p_path);
+        return false;
+    }
+
+    while (true)
+    {
+        // filter out backwards paths
+        if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0)
+        {
+            if (!FindNextFileA(hFind, &findData))
+            {
+                // no more files left, exit
+                break;
+            }
+            continue;
+        }
+
+        // this is a subdirectory, so recurse
+        if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
+            char nextPathBuffer[1024];
+            snprintf(nextPathBuffer, sizeof(nextPathBuffer), "%s\\%s", p_path, findData.cFileName);
+
+            if (!RecursivelyFindInterleaf(nextPathBuffer, p_interleafFiles))
+                // couldn't access this subdirectory, abort
+                return false;
+        }
+        else
+        {
+            // found an Interleaf file
+            if (StrStrI(findData.cFileName, ".si") != NULL)
+            {
+                // construct the full path to the file first
+                char fullPathBuffer[1024];
+                snprintf(fullPathBuffer, sizeof(fullPathBuffer), "%s\\%s", p_path, findData.cFileName);
+
+                // push it to the vector
+                p_interleafFiles.push_back(fullPathBuffer);
+            }
+        }
+
+        if (!FindNextFile(hFind, &findData))
+        {
+            // no more files left, exit
+            break;
+        }
+    }
+
+    // success
+    FindClose(hFind);
+    return true;
+#else
+    // POSIX implementation using dirent
     DIR *directory = opendir(p_path);
     if (!directory) {
         printf("Could not open directory %s, exiting\n", p_path);
@@ -33,7 +100,7 @@ bool RecursivelyFindInterleaf(const char *p_path, std::vector<std::string> &p_in
                     return false;
                 }
             }
-        } 
+        }
         else {
             if (strcasestr(dentry->d_name, ".si") != NULL) {
                 // found an Interleaf file
@@ -51,6 +118,7 @@ bool RecursivelyFindInterleaf(const char *p_path, std::vector<std::string> &p_in
     // success
     closedir(directory);
     return true;
+#endif
 }
 
 int main(int argc, char *argv[])
@@ -114,7 +182,10 @@ int main(int argc, char *argv[])
         // set filename to filePath without directory appended
         // libweaver unfortunately doesn't provide a way to get
         // the Interleaf name so we have to construct it ourselves
-        char *filename = strrchr(currentFilePath, '/');
+        char *lastIndexSlash = strrchr(currentFilePath, '/');
+        char *lastIndexBackslash = strrchr(currentFilePath, '\\');
+        char *filename = (lastIndexSlash > lastIndexBackslash) ? lastIndexSlash : lastIndexBackslash;
+
         if (filename) {
             // we don't need ".SI" for our purposes 
             // so just remove the last 3 characters

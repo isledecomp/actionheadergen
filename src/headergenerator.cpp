@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <string.h>
 
 #include "headergenerator.h"
 
@@ -20,7 +21,7 @@ bool HeaderGenerator::CreateForwardDeclHeader(char *p_outputDir)
 {
     // attempt to create special forward decl header
     if (!CreateHeader("", p_outputDir)) {
-        printf("Failed to create forward declaration header, check file permissions?\n");
+        printf("Failed to create forward declaration header, check file permissions or ensure output directory exists\n");
         return false;
     }
     return true;
@@ -30,7 +31,7 @@ bool HeaderGenerator::GenerateHeader(char *p_interleafName, std::map<size_t, std
 {
     // attempt to create header file
     if (!CreateHeader(p_interleafName, p_outputDir)) {
-        printf("Failed to create Interleaf header, check file permissions?\n");
+        printf("Failed to create Interleaf header, check file permissions or ensure output directory exists\n");
         return false;
     }
 
