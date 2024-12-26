@@ -1,5 +1,7 @@
 #include "interleafhandler.h"
 
+#include <sstream>
+
 typedef std::map<size_t, std::string> ActionMap;
 
 si::Interleaf::Error InterleafHandler::ReadInterleaf(char *p_filePath)
@@ -43,7 +45,7 @@ void InterleafHandler::AddActionsToMap(si::Core *p_object)
         if (actionAsObject->type() != si::MxOb::Null) {
             // check for sub-objects
             if (actionAsObject->HasChildren()) {
-                for (si::Core::Children::const_iterator it = actionAsObject->GetChildren().cbegin(); it != actionAsObject->GetChildren().cend(); ++it) {
+                for (si::Core::Children::const_iterator it = actionAsObject->GetChildren().begin(); it != actionAsObject->GetChildren().end(); ++it) {
                     // we have sub-objects, so we need to account for these
                     si::Object *subObject = static_cast<si::Object *>(*it);
                     if (subObject->HasChildren()) {
@@ -67,6 +69,7 @@ void InterleafHandler::ProcessDuplicates()
     // where every label is expected to be unique
 
     std::map<std::string, size_t> duplicatesMap;
+    std::stringstream ss;
 
     for (ActionMap::iterator it = m_actionMap->begin(); it != m_actionMap->end(); ++it) {
         // iterate through the entire action map 
@@ -79,7 +82,9 @@ void InterleafHandler::ProcessDuplicates()
         // to update the action names of all of the actions that have duplicates 
         if (duplicatesMap[it->second] > 1) {
             // append the index to the name
-            it->second += "_" + std::to_string(it->first);
+            ss.str("");
+            ss << it->second << "_" << it->first;
+            it->second = ss.str();
         } 
     }
 }
